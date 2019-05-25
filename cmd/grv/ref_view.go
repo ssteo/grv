@@ -360,7 +360,6 @@ func (refView *RefView) OnTrackingBranchesUpdated(trackingBranches []*LocalBranc
 
 // Render generates and writes the ref view to the provided window
 func (refView *RefView) Render(win RenderWindow) (err error) {
-	log.Debug("Rendering RefView")
 	refView.lock.Lock()
 	defer refView.lock.Unlock()
 
@@ -401,7 +400,7 @@ func (refView *RefView) Render(win RenderWindow) (err error) {
 		refIndex++
 	}
 
-	if err = win.SetSelectedRow(viewPos.SelectedRowIndex()+1, refView.active); err != nil {
+	if err = win.SetSelectedRow(viewPos.SelectedRowIndex()+1, refView.viewState); err != nil {
 		return
 	}
 
@@ -720,8 +719,8 @@ func (refView *RefView) setVariables() {
 	}
 
 	if branch != "" || tag != "" {
-		refView.variables.SetViewVariable(VarBranch, branch, refView.active)
-		refView.variables.SetViewVariable(VarTag, tag, refView.active)
+		refView.variables.SetViewVariable(VarBranch, branch, refView.viewState)
+		refView.variables.SetViewVariable(VarTag, tag, refView.viewState)
 	}
 }
 
@@ -1363,8 +1362,8 @@ func showActionsForRef(refView *RefView, action Action) (err error) {
 
 	head := refView.repoData.Head()
 	headName := head.Shorthand()
-	if StringWidth(headName) > 15 {
-		headName = headName[:15] + "..."
+	if StringWidth(headName) > 12 {
+		headName = headName[:12] + "..."
 	}
 
 	if !isHead {
@@ -1394,7 +1393,8 @@ func showActionsForRef(refView *RefView, action Action) (err error) {
 					cols: 60,
 				},
 				config: ContextMenuConfig{
-					Entries: contextMenuEntries,
+					ActionView: ViewRef,
+					Entries:    contextMenuEntries,
 					OnSelect: func(entry ContextMenuEntry, entryIndex uint) {
 						if selectedAction, ok := entry.Value.(Action); ok {
 							refView.channels.DoAction(selectedAction)

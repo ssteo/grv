@@ -132,7 +132,7 @@ type RenderWindow interface {
 	ViewDimensions() ViewDimension
 	Clear()
 	SetRow(rowIndex, startColumn uint, themeComponentID ThemeComponentID, format string, args ...interface{}) error
-	SetSelectedRow(rowIndex uint, active bool) error
+	SetSelectedRow(rowIndex uint, viewState ViewState) error
 	SetCursor(rowIndex, colIndex uint) error
 	SetTitle(themeComponentID ThemeComponentID, format string, args ...interface{}) error
 	SetFooter(themeComponentID ThemeComponentID, format string, args ...interface{}) error
@@ -235,10 +235,15 @@ func (lineBuilder *LineBuilder) Append(format string, args ...interface{}) *Line
 
 // AppendWithStyle adds the provided text with style information to the end of the line
 func (lineBuilder *LineBuilder) AppendWithStyle(themeComponentID ThemeComponentID, format string, args ...interface{}) *LineBuilder {
-	str := fmt.Sprintf(format, args...)
 	line := lineBuilder.line
+	var text string
+	if len(args) > 0 {
+		text = fmt.Sprintf(format, args...)
+	} else {
+		text = format
+	}
 
-	for _, codePoint := range str {
+	for _, codePoint := range text {
 		renderedCodePoints := DetermineRenderedCodePoint(codePoint, lineBuilder.column, lineBuilder.config)
 
 		for _, renderedCodePoint := range renderedCodePoints {
@@ -418,7 +423,7 @@ func (win *Window) ViewDimensions() ViewDimension {
 
 // Clear resets all cells in the window
 func (win *Window) Clear() {
-	log.Debugf("Clearing window %v", win.id)
+	log.Tracef("Clearing window %v", win.id)
 
 	for _, line := range win.lines {
 		for _, cell := range line.cells {
@@ -458,8 +463,9 @@ func (win *Window) SetRow(rowIndex, startColumn uint, themeComponentID ThemeComp
 }
 
 // SetSelectedRow sets the row to be highlighted as the selected row
-func (win *Window) SetSelectedRow(rowIndex uint, active bool) (err error) {
-	log.Debugf("Set selected rowIndex for window %v to %v with active %v", win.id, rowIndex, active)
+func (win *Window) SetSelectedRow(rowIndex uint, viewState ViewState) (err error) {
+	active := viewState == ViewStateActive
+	log.Tracef("Set selected rowIndex for window %v to %v with active %v", win.id, rowIndex, active)
 
 	if rowIndex >= win.rows {
 		return fmt.Errorf("SetSelectedRow: Invalid row index: %v >= %v rows", rowIndex, win.rows)

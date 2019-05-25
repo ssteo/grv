@@ -218,7 +218,7 @@ func NewGRV(readOnly bool) *GRV {
 		config:          config,
 		inputBuffer:     NewInputBuffer(keyBindings),
 		input:           NewInputKeyMapper(ui),
-		eventListeners:  []EventListener{view, repoData},
+		eventListeners:  []EventListener{view, repoData, config},
 		variables:       variables,
 	}
 }
@@ -539,7 +539,7 @@ func (grv *GRV) runCommand(action Action) (err error) {
 		cmd.Stderr = arg.stderr
 	}
 
-	cmd.Env = grv.repoData.GenerateGitCommandEnvironment()
+	cmd.Env, cmd.Dir = grv.repoData.GenerateGitCommandEnvironment()
 
 	if arg.interactive {
 		grv.ui.Suspend()
@@ -560,7 +560,7 @@ func (grv *GRV) runCommand(action Action) (err error) {
 	}
 
 	if arg.interactive {
-		if arg.promptForInput {
+		if arg.promptForInput && grv.config.GetBool(CfInputPromptAfterCommand) {
 			cmd.Stdout.Write([]byte("\nPress any key to continue"))
 			bufio.NewReader(cmd.Stdin).ReadByte()
 		}
@@ -622,8 +622,13 @@ func (grv *GRV) runSignalHandlerLoop(waitGroup *sync.WaitGroup, exitCh <-chan bo
 
 			switch signal {
 			case syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGHUP:
-				grv.End()
-				return
+				if signal == syscall.SIGINT && ReadLineActive() {
+					log.Debugf("Readline is active - cancelling readline")
+					CancelReadline()
+				} else {
+					grv.End()
+					return
+				}
 			case syscall.SIGCONT:
 				grv.Resume()
 			case syscall.SIGWINCH:
@@ -649,7 +654,7 @@ func (grv *GRV) runFileSystemMonitorLoop(waitGroup *sync.WaitGroup, exitCh <-cha
 	channels := grv.channels.Channels()
 	eventCh := make(chan fs.EventInfo, 1)
 	repoGitDir := grv.repoData.Path()
-	repoFilePath := strings.TrimSuffix(repoGitDir, GitRepositoryDirectoryName+"/")
+	repoFilePath := grv.repoData.RepositoryRootPath()
 	watchDir := repoFilePath + "..."
 
 	if err := fs.Watch(watchDir, eventCh, fs.All); err != nil {

@@ -164,6 +164,49 @@ func NewClassicTheme() MutableTheme {
 				bgcolor: NewSystemColor(ColorNone),
 				fgcolor: NewSystemColor(ColorRed),
 			},
+			CmpDiffviewFancyDiffLineSeparator: {
+				bgcolor: NewSystemColor(ColorNone),
+				fgcolor: NewSystemColor(ColorYellow),
+			},
+			CmpDiffviewFancyDiffLineFile: {
+				bgcolor: NewSystemColor(ColorNone),
+				fgcolor: NewSystemColor(ColorYellow),
+			},
+			CmpDiffviewFancyDifflineLineAdded: {
+				bgcolor: NewSystemColor(ColorNone),
+				fgcolor: NewSystemColor(ColorGreen),
+				style:   ThemeStyle{styleTypes: TstBold},
+			},
+			CmpDiffviewFancyDifflineLineRemoved: {
+				bgcolor: NewSystemColor(ColorNone),
+				fgcolor: NewSystemColor(ColorRed),
+				style:   ThemeStyle{styleTypes: TstBold},
+			},
+			CmpDiffviewFancyDifflineLineAddedChange: {
+				bgcolor: NewSystemColor(ColorNone),
+				fgcolor: NewSystemColor(ColorGreen),
+				style:   ThemeStyle{styleTypes: TstBold | TstReverse},
+			},
+			CmpDiffviewFancyDifflineLineRemovedChange: {
+				bgcolor: NewSystemColor(ColorNone),
+				fgcolor: NewSystemColor(ColorRed),
+				style:   ThemeStyle{styleTypes: TstBold | TstReverse},
+			},
+			CmpDiffviewFancyDifflineEmptyLineAdded: {
+				bgcolor: NewSystemColor(ColorNone),
+				fgcolor: NewSystemColor(ColorGreen),
+				style:   ThemeStyle{styleTypes: TstReverse},
+			},
+			CmpDiffviewFancyDifflineEmptyLineRemoved: {
+				bgcolor: NewSystemColor(ColorNone),
+				fgcolor: NewSystemColor(ColorRed),
+				style:   ThemeStyle{styleTypes: TstReverse},
+			},
+			CmpDiffviewFancyDifflineTrailingWhitespace: {
+				bgcolor: NewSystemColor(ColorNone),
+				fgcolor: NewSystemColor(ColorRed),
+				style:   ThemeStyle{styleTypes: TstReverse},
+			},
 			CmpRefviewTitle: {
 				bgcolor: NewSystemColor(ColorNone),
 				fgcolor: NewSystemColor(ColorCyan),
@@ -268,6 +311,10 @@ func NewClassicTheme() MutableTheme {
 				bgcolor: NewSystemColor(ColorNone),
 				fgcolor: NewSystemColor(ColorNone),
 			},
+			CmpContextMenuKeyMapping: {
+				bgcolor: NewSystemColor(ColorNone),
+				fgcolor: NewSystemColor(ColorBlue),
+			},
 			CmpContextMenuFooter: {
 				bgcolor: NewSystemColor(ColorNone),
 				fgcolor: NewSystemColor(ColorCyan),
@@ -372,427 +419,6 @@ func NewClassicTheme() MutableTheme {
 			CmpGRVVariableViewValue: {
 				bgcolor: NewSystemColor(ColorNone),
 				fgcolor: NewSystemColor(ColorYellow),
-			},
-			CmpGRVVariableViewFooter: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpRemoteViewTitle: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpRemoteViewRemote: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-			CmpRemoteViewFooter: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpSummaryViewHeader: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorMagenta),
-			},
-			CmpSummaryViewNormal: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
-			},
-			CmpSummaryViewBranchAhead: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorGreen),
-			},
-			CmpSummaryViewBranchBehind: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorRed),
-			},
-			CmpSummaryViewStagedFile: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorGreen),
-			},
-			CmpSummaryViewUnstagedFile: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorRed),
-			},
-			CmpSummaryViewNoModifiedFiles: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-		},
-	}
-}
-
-// NewColdTheme creates the cold theme of grv
-func NewColdTheme() MutableTheme {
-	return &ThemeComponents{
-		components: map[ThemeComponentID]*ThemeComponent{
-			CmpAllviewDefault: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
-			},
-			CmpAllviewSearchMatch: {
-				bgcolor: NewSystemColor(ColorYellow),
-				fgcolor: NewSystemColor(ColorNone),
-			},
-			CmpAllviewActiveViewSelectedRow: {
-				bgcolor: NewSystemColor(ColorWhite),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-			CmpAllviewInactiveViewSelectedRow: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
-			},
-			CmpMainviewActiveView: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
-			},
-			CmpMainviewNormalView: {
-				bgcolor: NewSystemColor(ColorCyan),
-				fgcolor: NewSystemColor(ColorWhite),
-			},
-			CmpCommitviewTitle: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-			CmpCommitviewFooter: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-			CmpCommitviewShortOid: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorMagenta),
-			},
-			CmpCommitviewDate: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpCommitviewAuthor: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpCommitviewSummary: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
-			},
-			CmpCommitviewTag: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorMagenta),
-			},
-			CmpCommitviewLocalBranch: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorMagenta),
-			},
-			CmpCommitviewRemoteBranch: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorMagenta),
-			},
-			CmpCommitviewGraphCommit: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-			CmpCommitviewGraphMergeCommit: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-			CmpCommitviewGraphBranch1: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorYellow),
-			},
-			CmpCommitviewGraphBranch2: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorRed),
-			},
-			CmpCommitviewGraphBranch3: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorGreen),
-			},
-			CmpCommitviewGraphBranch4: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorMagenta),
-			},
-			CmpCommitviewGraphBranch5: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpCommitviewGraphBranch6: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-			CmpCommitviewGraphBranch7: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorWhite),
-			},
-			CmpDiffviewTitle: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-			CmpDiffviewFooter: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-			CmpDiffviewDifflineNormal: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
-			},
-			CmpDiffviewDifflineDiffCommitAuthor: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpDiffviewDifflineDiffCommitAuthorDate: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpDiffviewDifflineDiffCommitCommitter: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpDiffviewDifflineDiffCommitCommitterDate: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpDiffviewDifflineDiffCommitMessage: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorMagenta),
-			},
-			CmpDiffviewDifflineDiffStatsFile: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
-			},
-			CmpDiffviewDifflineGitDiffHeader: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
-			},
-			CmpDiffviewDifflineGitDiffExtendedHeader: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
-			},
-			CmpDiffviewDifflineUnifiedDiffHeader: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
-			},
-			CmpDiffviewDifflineHunkStart: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorMagenta),
-			},
-			CmpDiffviewDifflineHunkHeader: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorMagenta),
-			},
-			CmpDiffviewDifflineLineAdded: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorGreen),
-			},
-			CmpDiffviewDifflineLineRemoved: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorRed),
-			},
-			CmpRefviewTitle: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-			CmpRefviewFooter: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-			CmpRefviewLocalBranchesHeader: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpRefviewRemoteBranchesHeader: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpRefviewLocalBranch: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
-			},
-			CmpRefviewHead: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorGreen),
-			},
-			CmpRefviewRemoteBranch: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
-			},
-			CmpRefviewTagsHeader: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpRefviewTag: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
-			},
-			CmpStatusbarviewNormal: {
-				bgcolor: NewSystemColor(ColorCyan),
-				fgcolor: NewSystemColor(ColorWhite),
-			},
-			CmpHelpbarviewSpecial: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpHelpbarviewNormal: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
-			},
-			CmpErrorViewTitle: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-			CmpErrorViewFooter: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-			CmpErrorViewErrors: {
-				bgcolor: NewSystemColor(ColorRed),
-				fgcolor: NewSystemColor(ColorWhite),
-			},
-			CmpGitStatusMessage: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorYellow),
-			},
-			CmpGitStatusStagedTitle: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpGitStatusUnstagedTitle: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpGitStatusUntrackedTitle: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpGitStatusConflictedTitle: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpGitStatusStagedFile: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorGreen),
-			},
-			CmpGitStatusUnstagedFile: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorRed),
-			},
-			CmpGitStatusUntrackedFile: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorRed),
-			},
-			CmpGitStatusConflictedFile: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorRed),
-			},
-			CmpContextMenuTitle: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-			CmpContextMenuContent: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
-			},
-			CmpContextMenuFooter: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-			CmpCommandOutputTitle: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-			CmpCommandOutputCommand: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorYellow),
-			},
-			CmpCommandOutputNormal: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
-			},
-			CmpCommandOutputError: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorRed),
-			},
-			CmpCommandOutputSuccess: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorGreen),
-			},
-			CmpCommandOutputFooter: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-			CmpHelpViewTitle: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpHelpViewIndexTitle: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-				style:   ThemeStyle{styleTypes: TstBold | TstUnderline},
-			},
-			CmpHelpViewIndexSubTitle: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-			CmpHelpViewSectionTitle: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-				style:   ThemeStyle{styleTypes: TstBold | TstUnderline},
-			},
-			CmpHelpViewSectionSubTitle: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorMagenta),
-				style:   ThemeStyle{styleTypes: TstUnderline},
-			},
-			CmpHelpViewSectionDescription: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
-			},
-			CmpHelpViewSectionCodeBlock: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpHelpViewSectionTableHeader: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-			CmpHelpViewSectionTableRow: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
-			},
-			CmpHelpViewSectionTableRowHighlighted: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorYellow),
-				style:   ThemeStyle{styleTypes: TstBold},
-			},
-			CmpHelpViewSectionTableCellSeparator: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpHelpViewFooter: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpMessageBoxTitle: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorBlue),
-			},
-			CmpMessageBoxContent: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
-			},
-			CmpMessageBoxSelectedButton: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
-				style:   ThemeStyle{styleTypes: TstUnderline | TstBold | TstReverse},
-			},
-			CmpGRVVariableViewTitle: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorCyan),
-			},
-			CmpGRVVariableViewVariable: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorMagenta),
-			},
-			CmpGRVVariableViewValue: {
-				bgcolor: NewSystemColor(ColorNone),
-				fgcolor: NewSystemColor(ColorNone),
 			},
 			CmpGRVVariableViewFooter: {
 				bgcolor: NewSystemColor(ColorNone),
@@ -1026,6 +652,49 @@ func NewSolarizedTheme() MutableTheme {
 				bgcolor: NewSystemColor(ColorNone),
 				fgcolor: NewColorNumber(solarizedRed),
 			},
+			CmpDiffviewFancyDiffLineSeparator: {
+				bgcolor: NewSystemColor(ColorNone),
+				fgcolor: NewColorNumber(solarizedYellow),
+			},
+			CmpDiffviewFancyDiffLineFile: {
+				bgcolor: NewSystemColor(ColorNone),
+				fgcolor: NewColorNumber(solarizedYellow),
+			},
+			CmpDiffviewFancyDifflineLineAdded: {
+				bgcolor: NewSystemColor(ColorNone),
+				fgcolor: NewColorNumber(solarizedGreen),
+				style:   ThemeStyle{styleTypes: TstBold},
+			},
+			CmpDiffviewFancyDifflineLineRemoved: {
+				bgcolor: NewSystemColor(ColorNone),
+				fgcolor: NewColorNumber(solarizedRed),
+				style:   ThemeStyle{styleTypes: TstBold},
+			},
+			CmpDiffviewFancyDifflineLineAddedChange: {
+				bgcolor: NewColorNumber(22),
+				fgcolor: NewColorNumber(10),
+				style:   ThemeStyle{styleTypes: TstBold},
+			},
+			CmpDiffviewFancyDifflineLineRemovedChange: {
+				bgcolor: NewColorNumber(52),
+				fgcolor: NewColorNumber(9),
+				style:   ThemeStyle{styleTypes: TstBold},
+			},
+			CmpDiffviewFancyDifflineEmptyLineAdded: {
+				bgcolor: NewSystemColor(ColorNone),
+				fgcolor: NewColorNumber(solarizedGreen),
+				style:   ThemeStyle{styleTypes: TstReverse},
+			},
+			CmpDiffviewFancyDifflineEmptyLineRemoved: {
+				bgcolor: NewSystemColor(ColorNone),
+				fgcolor: NewColorNumber(solarizedRed),
+				style:   ThemeStyle{styleTypes: TstReverse},
+			},
+			CmpDiffviewFancyDifflineTrailingWhitespace: {
+				bgcolor: NewSystemColor(ColorNone),
+				fgcolor: NewColorNumber(solarizedRed),
+				style:   ThemeStyle{styleTypes: TstReverse},
+			},
 			CmpRefviewTitle: {
 				bgcolor: NewSystemColor(ColorNone),
 				fgcolor: NewColorNumber(solarizedCyan),
@@ -1129,6 +798,10 @@ func NewSolarizedTheme() MutableTheme {
 			CmpContextMenuContent: {
 				bgcolor: NewColorNumber(solarizedBlack),
 				fgcolor: NewColorNumber(solarizedWhite),
+			},
+			CmpContextMenuKeyMapping: {
+				bgcolor: NewColorNumber(solarizedBlack),
+				fgcolor: NewColorNumber(solarizedBlue),
 			},
 			CmpContextMenuFooter: {
 				bgcolor: NewColorNumber(solarizedBlack),

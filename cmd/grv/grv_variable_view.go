@@ -33,8 +33,6 @@ func (grvVariableView *GRVVariableView) Render(win RenderWindow) (err error) {
 	grvVariableView.lock.Lock()
 	defer grvVariableView.lock.Unlock()
 
-	log.Debug("Rendering GRVVariableView")
-
 	grvVariableView.lastViewDimension = win.ViewDimensions()
 
 	variables := grvVariableView.variables.VariableValues()
@@ -63,7 +61,7 @@ func (grvVariableView *GRVVariableView) Render(win RenderWindow) (err error) {
 		viewRowIndex++
 	}
 
-	if err = win.SetSelectedRow(viewPos.SelectedRowIndex()+1, grvVariableView.active); err != nil {
+	if err = win.SetSelectedRow(viewPos.SelectedRowIndex()+1, grvVariableView.viewState); err != nil {
 		return
 	}
 

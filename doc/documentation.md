@@ -55,7 +55,7 @@ GRV accepts the following command line arguments:
 -logFile string
 	Log file path (default "grv.log")
 -logLevel string
-	Logging level [NONE|PANIC|FATAL|ERROR|WARN|INFO|DEBUG] (default "NONE")
+	Logging level [NONE|PANIC|FATAL|ERROR|WARN|INFO|DEBUG|TRACE] (default "NONE")
 -readOnly
 	Run grv in read only mode
 -repoFilePath string
@@ -125,7 +125,6 @@ The following tables contain default and user configured key bindings
 ```
  Key Bindings | Action                       | Description                                     
  -------------+------------------------------+--------------------------------------------------
- None         | <grv-checkout-previous-ref>  | Checkout previous ref                           
  None         | <grv-exit>                   | Exit GRV                                        
  :            | <grv-prompt>                 | GRV Command prompt                              
  None         | <grv-remove-tab>             | Remove the active tab                           
@@ -140,6 +139,7 @@ The following tables contain default and user configured key bindings
 ```
  Key Bindings | Action                           | Description                               
  -------------+----------------------------------+--------------------------------------------
+ -            | <grv-checkout-previous-ref>      | Checkout previous ref                     
  c            | <grv-checkout-ref>               | Checkout ref                              
  T            | <grv-create-annotated-tag>       | Create a new annotated tag                
  B            | <grv-create-branch-and-checkout> | Create a new branch and checkout          
@@ -203,18 +203,20 @@ Configuration variables allow features to be enabled, disabled and configured.
 They are specified using the set command in the grvrc file or at the command prompt
 
 ```
- Variable             | Type   | Default Value | Description                                                                 
- ---------------------+--------+---------------+------------------------------------------------------------------------------
- commit-graph         | bool   | false         | Commit graph visible                                                        
- commit-limit         | string |               | Limit the number of commits loaded. Allowed values: number, date, oid or tag
- confirm-checkout     | bool   | true          | Confirm before performing git checkout                                      
- default-view         | string |               | Command to generate a custom default view on start up                       
- git-binary-file-path | string |               | File path to git binary. Required only when git binary is not in $PATH      
- mouse                | bool   | false         | Mouse support enabled                                                       
- mouse-scroll-rows    | int    | 3             | Number of rows scrolled for each mouse event                                
- prompt-history-size  | int    | 1000          | Maximum number of prompt entries retained                                   
- tabwidth             | int    | 8             | Tab character screen width (minimum value: 1)                               
- theme                | string | solarized     | The currently active theme                                                  
+ Variable                   | Type   | Default Value | Description                                                                 
+ ---------------------------+--------+---------------+------------------------------------------------------------------------------
+ commit-graph               | bool   | false         | Commit graph visible                                                        
+ commit-limit               | string | 100000        | Limit the number of commits loaded. Allowed values: number, date, oid or tag
+ confirm-checkout           | bool   | true          | Confirm before performing git checkout                                      
+ default-view               | string |               | Command to generate a custom default view on start up                       
+ diff-display               | string | fancy         | Diff display format                                                         
+ git-binary-file-path       | string |               | File path to git binary. Required only when git binary is not in $PATH      
+ input-prompt-after-command | bool   | true          | Display "Press any key to continue" after executing external command        
+ mouse                      | bool   | false         | Mouse support enabled                                                       
+ mouse-scroll-rows          | int    | 3             | Number of rows scrolled for each mouse event                                
+ prompt-history-size        | int    | 1000          | Maximum number of prompt entries retained                                   
+ tabwidth                   | int    | 8             | Tab character screen width (minimum value: 1)                               
+ theme                      | string | solarized     | The currently active theme                                                  
 ```
 
 
@@ -469,10 +471,9 @@ GRV currently has the following themes available:
 
  - solarized
  - classic
- - cold
 
 The solarized theme is the default theme for GRV and does not respect the terminals colour palette.
-The classic and cold themes do respect the terminals colour palette.
+The classic theme respects the terminals colour palette.
 
 ### sleep
 
@@ -589,6 +590,7 @@ CommitView.Title
 
 ContextMenuView.Content
 ContextMenuView.Footer
+ContextMenuView.KeyMapping
 ContextMenuView.Title
 
 DiffView.AddedLine
@@ -597,6 +599,15 @@ DiffView.CommitAuthorDate
 DiffView.CommitCommitter
 DiffView.CommitCommitterDate
 DiffView.CommitMessage
+DiffView.FancyEmptyLineAdded
+DiffView.FancyEmptyLineRemoved
+DiffView.FancyFile
+DiffView.FancyLineAdded
+DiffView.FancyLineAddedChange
+DiffView.FancyLineRemoved
+DiffView.FancyLineRemovedChange
+DiffView.FancySeparator
+DiffView.FancyTrailingWhitespace
 DiffView.Footer
 DiffView.GitDiffExtendedHeader
 DiffView.GitDiffHeader
@@ -750,18 +761,19 @@ These variables represent the current state of the visible views.
 The set of variables available is:
 
 ```
- Variable     | Description                       
- -------------+------------------------------------
- head         | Value of HEAD                     
- branch       | Selected branch                   
- tag          | Selected tag                      
- commit       | Selected commit                   
- file         | Selected file                     
- line-text    | Selected lines content            
- line-number  | Selected line number              
- line-count   | Number of lines in the active view
- repo-path    | Repository file path              
- repo-workdir | Work directory path               
+ Variable       | Description                       
+ ---------------+------------------------------------
+ head           | Value of HEAD                     
+ branch         | Selected branch                   
+ tag            | Selected tag                      
+ commit         | Selected commit                   
+ file           | Selected file                     
+ diff-view-file | Selected DiffView file            
+ line-text      | Selected lines content            
+ line-number    | Selected line number              
+ line-count     | Number of lines in the active view
+ repo-path      | Repository file path              
+ repo-workdir   | Work directory path               
 ```
 
 Variables can be specified in shell commands using the syntax:

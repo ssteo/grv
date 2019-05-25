@@ -164,17 +164,15 @@ type NCursesUI struct {
 	maxColorPairs int
 	suspended     bool
 	suspendedLock *sync.Cond
-	mouseMask     gc.MouseButton
 	colorPairs    map[ThemeComponentID]int16
 }
 
 // NewNCursesDisplay creates a new NCursesUI instance
 func NewNCursesDisplay(channels Channels, config Config) *NCursesUI {
 	ui := &NCursesUI{
-		windows:   make(map[*Window]*nCursesWindow),
-		channels:  channels,
-		config:    config,
-		mouseMask: gc.M_ALL,
+		windows:  make(map[*Window]*nCursesWindow),
+		channels: channels,
+		config:   config,
 	}
 
 	ui.suspendedLock = sync.NewCond(&ui.lock)
@@ -266,9 +264,7 @@ func (ui *NCursesUI) initialiseNCurses() (err error) {
 	gc.Raw(true)
 	gc.MouseInterval(0)
 
-	if ui.config.GetBool(CfMouse) {
-		ui.toggleMouse()
-	}
+	ui.updateMouseState()
 
 	if gc.Cursor(0) != nil {
 		log.Debugf("Unable to hide cursor")
@@ -371,7 +367,7 @@ func (ui *NCursesUI) Update(wins []*Window) (err error) {
 }
 
 func (ui *NCursesUI) createAndUpdateWindows(wins []*Window) (err error) {
-	log.Debug("Creating and updating NCurses windows")
+	log.Trace("Creating and updating NCurses windows")
 
 	winMap := make(map[*Window]bool)
 
@@ -384,13 +380,13 @@ func (ui *NCursesUI) createAndUpdateWindows(wins []*Window) (err error) {
 			nwin.Resize(int(win.rows), int(win.cols))
 			nwin.MoveWindow(int(win.startRow), int(win.startCol))
 			nwin.setHidden(false)
-			log.Debugf("Moving NCurses window %v to row:%v,col:%v", win.ID(), win.startRow, win.startCol)
+			log.Tracef("Moving NCurses window %v to row:%v,col:%v", win.ID(), win.startRow, win.startCol)
 		} else if !nwin.hidden() {
 			nwin.Erase()
 			nwin.Resize(0, 0)
 			nwin.NoutRefresh()
 			nwin.setHidden(true)
-			log.Debugf("Hiding NCurses window %v", win.ID())
+			log.Tracef("Hiding NCurses window %v", win.ID())
 		}
 	}
 
@@ -455,7 +451,7 @@ func (ui *NCursesUI) drawWindows(wins []*Window) (err error) {
 }
 
 func (ui *NCursesUI) drawWindow(win *Window, nwin *nCursesWindow) {
-	log.Debugf("Drawing window %v", win.ID())
+	log.Tracef("Drawing window %v", win.ID())
 
 	nwin.SetBackground(gc.ColorPair(ui.colorPair(CmpAllviewDefault)))
 
@@ -520,14 +516,13 @@ func (ui *NCursesUI) GetInput(force bool) (key Key, err error) {
 			fdSet(pipeFd, rfds)
 			nullPointer := uintptr(unsafe.Pointer(nil))
 
-			if _, _, errno := syscall.Syscall6(SelectSyscallID(), uintptr(pipeFd+1), uintptr(unsafe.Pointer(rfds)),
-				nullPointer, nullPointer, nullPointer, 0); errno != 0 {
-				err = errno
-			}
+			_, _, errno := syscall.Syscall6(SelectSyscallID(), uintptr(pipeFd+1), uintptr(unsafe.Pointer(rfds)),
+				nullPointer, nullPointer, nullPointer, 0)
 
 			switch {
-			case err != nil:
-				err = fmt.Errorf("Select system call failed: %v", err)
+			case errno == syscall.EINTR:
+			case errno != 0:
+				err = fmt.Errorf("Select system call failed: %v", errno.Error())
 				return
 			case fdIsset(pipeFd, rfds):
 				if _, err := ui.pipe.read.Read(make([]byte, 8)); err != nil {
@@ -620,7 +615,7 @@ func (ui *NCursesUI) getMouseEventType(mouseEvent *gc.MouseEvent) (mouseEventTyp
 	case (button & gc.M_B1_PRESSED) != 0:
 		mouseEventType = MetLeftClick
 		exists = true
-	case (button & (gc.M_B4_PRESSED | gc.M_B4_TPL_CLICKED)) != 0:
+	case (button & (gc.M_B4_PRESSED | gc.M_B4_TPL_CLICKED | gc.M_B4_DBL_CLICKED)) != 0:
 		mouseEventType = MetScrollUp
 		exists = true
 	case C.grv_is_scroll_down(C.long(button)) != 0:
@@ -653,15 +648,20 @@ func (ui *NCursesUI) onConfigVariableChange(configVariable ConfigVariable) {
 		theme := ui.config.GetTheme()
 		ui.initialiseColorPairsFromTheme(theme)
 	case CfMouse:
-		ui.toggleMouse()
+		ui.updateMouseState()
 	default:
 		log.Warnf("Received notification for variable I didn't register for: %v", configVariable)
 	}
 }
 
-func (ui *NCursesUI) toggleMouse() {
-	log.Infof("Toggling mouse enabled")
-	gc.MouseMask(ui.mouseMask, &ui.mouseMask)
+func (ui *NCursesUI) updateMouseState() {
+	if ui.config.GetBool(CfMouse) {
+		log.Infof("Mouse enabled")
+		gc.MouseMask(gc.M_ALL, nil)
+	} else {
+		log.Infof("Mouse disabled")
+		gc.MouseMask(0, nil)
+	}
 }
 
 func (ui *NCursesUI) initialiseColorPairsFromTheme(theme Theme) {

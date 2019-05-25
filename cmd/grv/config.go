@@ -17,22 +17,23 @@ import (
 )
 
 const (
-	cfDefaultConfigHomeDir          = "/.config"
-	cfGrvConfigDir                  = "/grv"
-	cfGrvrcFile                     = "/grvrc"
-	cfTabWidthMinValue              = 1
-	cfTabWidthDefaultValue          = 8
-	cfClassicThemeName              = "classic"
-	cfColdThemeName                 = "cold"
-	cfSolarizedThemeName            = "solarized"
-	cfMouseDefaultValue             = false
-	cfMouseScrollRowsDefaultValue   = 3
-	cfCommitGraphDefaultValue       = false
-	cfConfirmCheckoutDefaultValue   = true
-	cfPromptHistorySizeDefaultValue = 1000
-	cfGitBinaryFilePathDefaultValue = ""
-	cfCommitLimitDefaultValue       = ""
-	cfDefaultViewDefaultValue       = ""
+	cfDefaultConfigHomeDir                = "/.config"
+	cfGrvConfigDir                        = "/grv"
+	cfGrvrcFile                           = "/grvrc"
+	cfTabWidthMinValue                    = 1
+	cfTabWidthDefaultValue                = 8
+	cfClassicThemeName                    = "classic"
+	cfSolarizedThemeName                  = "solarized"
+	cfMouseDefaultValue                   = false
+	cfMouseScrollRowsDefaultValue         = 3
+	cfCommitGraphDefaultValue             = false
+	cfConfirmCheckoutDefaultValue         = true
+	cfPromptHistorySizeDefaultValue       = 1000
+	cfGitBinaryFilePathDefaultValue       = ""
+	cfCommitLimitDefaultValue             = "100000"
+	cfDefaultViewDefaultValue             = ""
+	cfDiffDisplayDefaultValue             = "fancy"
+	cfInputPromptAfterCommandDefaultValue = true
 
 	cfAllView             = "All"
 	cfMainView            = "MainView"
@@ -82,6 +83,10 @@ const (
 	CfCommitLimit ConfigVariable = "commit-limit"
 	// CfDefaultView stores the command to generate the default view
 	CfDefaultView ConfigVariable = "default-view"
+	// CfDiffDisplay stores the way diffs are displayed
+	CfDiffDisplay ConfigVariable = "diff-display"
+	// CfInputPromptAfterCommand stores whether the user is prompted for input after a command
+	CfInputPromptAfterCommand ConfigVariable = "input-prompt-after-command"
 )
 
 var systemColorValues = map[string]SystemColorValue{
@@ -159,22 +164,31 @@ var themeComponents = map[string]ThemeComponentID{
 	cfCommitView + ".CommitGraphBranch6":     CmpCommitviewGraphBranch6,
 	cfCommitView + ".CommitGraphBranch7":     CmpCommitviewGraphBranch7,
 
-	cfDiffView + ".Title":                 CmpDiffviewTitle,
-	cfDiffView + ".Footer":                CmpDiffviewFooter,
-	cfDiffView + ".Normal":                CmpDiffviewDifflineNormal,
-	cfDiffView + ".CommitAuthor":          CmpDiffviewDifflineDiffCommitAuthor,
-	cfDiffView + ".CommitAuthorDate":      CmpDiffviewDifflineDiffCommitAuthorDate,
-	cfDiffView + ".CommitCommitter":       CmpDiffviewDifflineDiffCommitCommitter,
-	cfDiffView + ".CommitCommitterDate":   CmpDiffviewDifflineDiffCommitCommitterDate,
-	cfDiffView + ".CommitMessage":         CmpDiffviewDifflineDiffCommitMessage,
-	cfDiffView + ".StatsFile":             CmpDiffviewDifflineDiffStatsFile,
-	cfDiffView + ".GitDiffHeader":         CmpDiffviewDifflineGitDiffHeader,
-	cfDiffView + ".GitDiffExtendedHeader": CmpDiffviewDifflineGitDiffExtendedHeader,
-	cfDiffView + ".UnifiedDiffHeader":     CmpDiffviewDifflineUnifiedDiffHeader,
-	cfDiffView + ".HunkStart":             CmpDiffviewDifflineHunkStart,
-	cfDiffView + ".HunkHeader":            CmpDiffviewDifflineHunkHeader,
-	cfDiffView + ".AddedLine":             CmpDiffviewDifflineLineAdded,
-	cfDiffView + ".RemovedLine":           CmpDiffviewDifflineLineRemoved,
+	cfDiffView + ".Title":                   CmpDiffviewTitle,
+	cfDiffView + ".Footer":                  CmpDiffviewFooter,
+	cfDiffView + ".Normal":                  CmpDiffviewDifflineNormal,
+	cfDiffView + ".CommitAuthor":            CmpDiffviewDifflineDiffCommitAuthor,
+	cfDiffView + ".CommitAuthorDate":        CmpDiffviewDifflineDiffCommitAuthorDate,
+	cfDiffView + ".CommitCommitter":         CmpDiffviewDifflineDiffCommitCommitter,
+	cfDiffView + ".CommitCommitterDate":     CmpDiffviewDifflineDiffCommitCommitterDate,
+	cfDiffView + ".CommitMessage":           CmpDiffviewDifflineDiffCommitMessage,
+	cfDiffView + ".StatsFile":               CmpDiffviewDifflineDiffStatsFile,
+	cfDiffView + ".GitDiffHeader":           CmpDiffviewDifflineGitDiffHeader,
+	cfDiffView + ".GitDiffExtendedHeader":   CmpDiffviewDifflineGitDiffExtendedHeader,
+	cfDiffView + ".UnifiedDiffHeader":       CmpDiffviewDifflineUnifiedDiffHeader,
+	cfDiffView + ".HunkStart":               CmpDiffviewDifflineHunkStart,
+	cfDiffView + ".HunkHeader":              CmpDiffviewDifflineHunkHeader,
+	cfDiffView + ".AddedLine":               CmpDiffviewDifflineLineAdded,
+	cfDiffView + ".RemovedLine":             CmpDiffviewDifflineLineRemoved,
+	cfDiffView + ".FancySeparator":          CmpDiffviewFancyDiffLineSeparator,
+	cfDiffView + ".FancyFile":               CmpDiffviewFancyDiffLineFile,
+	cfDiffView + ".FancyLineAdded":          CmpDiffviewFancyDifflineLineAdded,
+	cfDiffView + ".FancyLineRemoved":        CmpDiffviewFancyDifflineLineRemoved,
+	cfDiffView + ".FancyLineAddedChange":    CmpDiffviewFancyDifflineLineAddedChange,
+	cfDiffView + ".FancyLineRemovedChange":  CmpDiffviewFancyDifflineLineRemovedChange,
+	cfDiffView + ".FancyEmptyLineAdded":     CmpDiffviewFancyDifflineEmptyLineAdded,
+	cfDiffView + ".FancyEmptyLineRemoved":   CmpDiffviewFancyDifflineEmptyLineRemoved,
+	cfDiffView + ".FancyTrailingWhitespace": CmpDiffviewFancyDifflineTrailingWhitespace,
 
 	cfGitStatusView + ".Message":         CmpGitStatusMessage,
 	cfGitStatusView + ".StagedTitle":     CmpGitStatusStagedTitle,
@@ -208,9 +222,10 @@ var themeComponents = map[string]ThemeComponentID{
 	cfErrorView + ".Footer": CmpErrorViewFooter,
 	cfErrorView + ".Errors": CmpErrorViewErrors,
 
-	cfContextMenuView + ".Title":   CmpContextMenuTitle,
-	cfContextMenuView + ".Content": CmpContextMenuContent,
-	cfContextMenuView + ".Footer":  CmpContextMenuFooter,
+	cfContextMenuView + ".Title":      CmpContextMenuTitle,
+	cfContextMenuView + ".Content":    CmpContextMenuContent,
+	cfContextMenuView + ".KeyMapping": CmpContextMenuKeyMapping,
+	cfContextMenuView + ".Footer":     CmpContextMenuFooter,
 
 	cfCommandOutputView + ".Title":   CmpCommandOutputTitle,
 	cfCommandOutputView + ".Command": CmpCommandOutputCommand,
@@ -335,7 +350,6 @@ func NewConfiguration(keyBindings KeyBindings, channels Channels, variables GRVV
 		customCommands: map[string]string{},
 		themes: map[string]MutableTheme{
 			cfClassicThemeName:   NewClassicTheme(),
-			cfColdThemeName:      NewColdTheme(),
 			cfSolarizedThemeName: NewSolarizedTheme(),
 		},
 	}
@@ -396,6 +410,18 @@ func NewConfiguration(keyBindings KeyBindings, channels Channels, variables GRVV
 			defaultValue: cfDefaultViewDefaultValue,
 			validator:    &defaultViewValidator{config: config},
 			description:  "Command to generate a custom default view on start up",
+		},
+		CfDiffDisplay: {
+			defaultValue: cfDiffDisplayDefaultValue,
+			validator:    &diffDisplayValidator{},
+			description:  "Diff display format",
+		},
+		CfInputPromptAfterCommand: {
+			defaultValue: cfInputPromptAfterCommandDefaultValue,
+			validator: booleanValueValidator{
+				variableName: string(CfInputPromptAfterCommand),
+			},
+			description: `Display "Press any key to continue" after executing external command`,
 		},
 	}
 
@@ -1056,6 +1082,31 @@ func (config *Configuration) KeyStrings(actionType ActionType, viewHierarchy Vie
 	return
 }
 
+// HandleEvent reacts to an event
+func (config *Configuration) HandleEvent(event Event) (err error) {
+	switch event.EventType {
+	case ViewRemovedEvent:
+		for _, view := range event.Args {
+			if listener, ok := view.(ConfigVariableOnChangeListener); ok {
+				config.removeOnChangeListener(listener)
+			}
+		}
+	}
+
+	return
+}
+
+func (config *Configuration) removeOnChangeListener(onChangeListener ConfigVariableOnChangeListener) {
+	for _, variable := range config.configVariables {
+		for index, listener := range variable.onChangeListeners {
+			if onChangeListener == listener {
+				variable.onChangeListeners = append(variable.onChangeListeners[:index], variable.onChangeListeners[index+1:]...)
+				break
+			}
+		}
+	}
+}
+
 // GenerateHelpSections generates all help tables related to configuration
 func (config *Configuration) GenerateHelpSections() (helpSections []*HelpSection) {
 	helpSections = append(helpSections, config.keyBindings.GenerateHelpSections(config)...)
@@ -1214,6 +1265,18 @@ func (defaultViewValidator *defaultViewValidator) validate(value string) (proces
 		err = fmt.Errorf("No user defined command with name \"%v\" exists", value)
 	} else {
 		processedValue = value
+	}
+
+	return
+}
+
+type diffDisplayValidator struct{}
+
+func (diffDisplayValidator *diffDisplayValidator) validate(value string) (processedValue interface{}, err error) {
+	if IsValidDiffProcessorName(value) {
+		processedValue = value
+	} else {
+		err = fmt.Errorf("Invalid %v value %v", CfDiffDisplay, value)
 	}
 
 	return

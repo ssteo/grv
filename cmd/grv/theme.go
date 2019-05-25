@@ -61,6 +61,15 @@ const (
 	CmpDiffviewDifflineHunkHeader
 	CmpDiffviewDifflineLineAdded
 	CmpDiffviewDifflineLineRemoved
+	CmpDiffviewFancyDiffLineSeparator
+	CmpDiffviewFancyDiffLineFile
+	CmpDiffviewFancyDifflineLineAdded
+	CmpDiffviewFancyDifflineLineRemoved
+	CmpDiffviewFancyDifflineLineAddedChange
+	CmpDiffviewFancyDifflineLineRemovedChange
+	CmpDiffviewFancyDifflineEmptyLineAdded
+	CmpDiffviewFancyDifflineEmptyLineRemoved
+	CmpDiffviewFancyDifflineTrailingWhitespace
 
 	CmpGitStatusMessage
 	CmpGitStatusStagedTitle
@@ -96,6 +105,7 @@ const (
 
 	CmpContextMenuTitle
 	CmpContextMenuContent
+	CmpContextMenuKeyMapping
 	CmpContextMenuFooter
 
 	CmpCommandOutputTitle
